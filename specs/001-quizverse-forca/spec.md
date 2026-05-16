@@ -14,6 +14,31 @@
 offline-first, estado testável, comunicação clara em português (Brasil), e
 conteúdo confiável com progressão justa.
 
+## Clarifications
+
+### Session 2026-05-16
+
+- Q: Does QuizVerse require user accounts and login? → A: Fully local/anonymous
+  (no accounts, no login, progress stored only on device). Aligns with
+  offline-first and keeps P1/P2 scope simple.
+
+- Q: What is initial state when player first opens app? → A: Level 1, Score 0,
+  Trophies 1. Start with 1 free trophy for fair first-game experience,
+  improving engagement without over-generosity.
+
+- Q: Target scale limits for levels and questions? → A: Unlimited levels,
+  500–1000 question pool. Supports indefinite progression, fresh content via
+  GitHub sync, fits storage/performance targets (< 10 MB typical).
+
+- Q: Detailed guidelines for educational context ("1-2 frases")? → A: Strict:
+  1-2 sentences, max 120 characters per language. Ensures consistency,
+  simplifies localization, prevents UI overflow, makes validation testable.
+
+- Q: Security & privacy posture (data at rest, transmission, reporting)? → A:
+  Minimal for P1. HTTPS only for GitHub sync. No crash reporting, no telemetry,
+  no local encryption, no privacy policy needed. Aligns with simplicity; add
+  privacy features in P3+.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Jogar Forca Offline (Priority: P1)
@@ -196,8 +221,9 @@ para português (Brasil) sem erros.
   pergunta e incrementar contador de erros consecutivos ao errar. Após 10
   acertos, o nível deve incrementar; após 3 erros consecutivos, Game Over.
 
-- **FR-004**: Sistema DEVE exibir contexto educativo curto (1-2 frases) após
-  cada acerto ou erro, explicando a pergunta ou resposta.
+- **FR-004**: Sistema DEVE exibir contexto educativo curto após cada acerto ou
+  erro. Formato: 1-2 sentences, máximo 120 caracteres por idioma. Se conteúdo
+  exceder, truncar com "..." e logar aviso. Simplifica localização e validação.
 
 - **FR-005**: Sistema DEVE permitir ao jogador continuar após Game Over pagando
   1 troféu (mantendo nível e pontuação) ou reiniciar (retornando ao nível 1,
@@ -256,6 +282,11 @@ para português (Brasil) sem erros.
 - **NFR-009**: Sincronização não deve consumir mais de 5 MB de banda em uma
   requisição típica (arquivo perguntas.json). Cache deve ser versionado para
   detectar duplicatas após sincronização múltipla.
+
+- **NFR-010**: Security posture para P1 é minimal: HTTPS para GitHub sync,
+  nenhum crash reporting, nenhuma telemetria, nenhuma criptografia local,
+  nenhuma privacy policy obrigatória. Crash reporting and local encryption são
+  features futuras (P3+).
 
 ### Key Entities
 
@@ -316,6 +347,15 @@ para português (Brasil) sem erros.
 
 ## Assumptions
 
+- **Modelo de Usuário**: Totalmente local e anônimo. Nenhuma conta, login ou
+  autenticação necessária. Progresso armazenado apenas no dispositivo do
+  jogador. Sincronização de nuvem e contas são recursos futuros (P4+).
+
+- **Estado Inicial**: Quando o jogador abre o app pela primeira vez (ou após
+  limpar dados), começa no Nível 1, Pontuação 0, com 1 Troféu. Este troféu
+  inicial oferece uma experiência justa na primeira partida e melhora
+  engajamento.
+
 - **Usuário alvo**: Jogadores de 13+ anos interessados em quiz e aprendizado
   (audência educativa).
 
@@ -331,7 +371,14 @@ para português (Brasil) sem erros.
 - **GitHub como fonte única de verdade**: O arquivo `perguntas.json` no
   repositório GitHub é a fonte única e confiável para novas perguntas. Formato
   é JSON com estrutura [{id, pergunta, resposta, exibicao_resposta, categoria,
-  dificuldade, contexto_historico}, ...].
+  dificuldade, contexto_historico}, ...]. Pool target: 500–1000 perguntas
+  totais. Sem cap em níveis (progressão infinita suportada).
+
+- **Formato do Contexto Educativo**: Cada pergunta deve ter um campo
+  `contexto_historico` com máximo 120 caracteres por idioma, contendo 1-2
+  sentences. Se conteúdo exceder, será truncado na exibição (com "...") e um
+  aviso será logado durante sincronização. Garante consistência de UI e
+  simplifica localização.
 
 - **Limite de troféus**: Troféus podem ser gastos apenas ao continuar após Game
   Over. Outras formas de ganhar troféus (vídeos ad, bônus de nível, daily
@@ -348,3 +395,8 @@ para português (Brasil) sem erros.
 - **Offline não significa "forever"**: App funciona offline com cache existente,
   mas novas perguntas só sincronizam quando conectado. Esperado que usuário
   tenha acesso a internet a cada 24h (razoável para mobile).
+
+- **Segurança & Privacidade para P1**: Postura minimal. HTTPS para GitHub sync.
+  Sem crash reporting, telemetria, criptografia local, ou privacy policy. Dados
+  armazenados em plain text localmente (aceitável para jogo anônimo
+  single-device offline). Criptografia e reportings são features P3+.
