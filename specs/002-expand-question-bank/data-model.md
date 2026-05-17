@@ -3,6 +3,8 @@
 **Feature**: 002-expand-question-bank  
 **Date**: 2026-05-16
 
+**Nota**: Este documento é a fonte de verdade para nomes formais de entidades, schemas e validações. Referências em [`spec.md`](spec.md) usam os nomes técnicos definidos aqui.
+
 ## Visão Geral
 
 Esta feature estende o modelo existente para suportar:

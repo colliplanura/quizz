@@ -13,7 +13,7 @@ Implementar a feature 002 com:
 
 - Flutter e Dart instalados
 - Dependências do projeto resolvidas
-- Branch ativa da feature: 002-create-new-spec
+- Branch ativa da feature: 002-expand-question-bank-clean
 
 ## Passo a passo
 
@@ -54,6 +54,23 @@ Implementar a feature 002 com:
 - flutter analyze
 - flutter test test/unit/
 - flutter test test/integration/
+- flutter test test/benchmark/benchmark_distribuicao.dart
+
+## Validacao de Integracao (feature 002)
+
+Executar em sequencia:
+
+1. flutter test test/integration/test_catalogo_flow.dart
+2. flutter test test/integration/test_selecao_pergunta_integracao.dart
+3. flutter test test/integration/test_wall_clock_anti_repeticao.dart
+4. flutter test test/integration/test_catalog_load_performance.dart
+
+Critérios de aceite:
+
+- fluxo de catalogo com 1000 perguntas sem falhas
+- distribuicao adaptativa respeitando faixas por nivel
+- anti-repeticao de 2h com fallback quando pool elegivel esgotar
+- p95 de carregamento de catalogo abaixo de 200ms
 
 ## Resultado esperado
 

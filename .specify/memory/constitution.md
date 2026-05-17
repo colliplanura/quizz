@@ -1,7 +1,7 @@
 <!--
 Sync Impact Report
 
-- Version change: 1.0.0 -> 1.1.0
+- Version change: 1.1.0 -> 2.0.0
 - Modified principles:
 	- Template Principle 1 -> I. Arquitetura Flutter Mobile em Primeiro Lugar
 	- Template Principle 2 -> II. Jogo Offline-First e Sincronização Silenciosa
@@ -69,7 +69,7 @@ barreiras de linguagem ou de uso.
 
 Cada pergunta deve guardar a resposta em formato normalizado para o jogo e a
 forma de exibição com acentos. A progressão deve ser objetiva: 10 acertos por
-nível, 3 erros consecutivos levam ao Game Over e a condição de continuar ou
+nivel, 5 erros consecutivos levam ao Game Over e a condição de continuar ou
 reiniciar precisa seguir exatamente as regras definidas. Todo acerto ou erro
 deve gerar um contexto educativo curto.
 
@@ -121,4 +121,4 @@ Revisões de conformidade:
 - Cada conjunto de tarefas deve apontar cobertura para os princípios aplicáveis.
 - Toda exceção precisa ter prazo, responsável e motivo registrados no plano.
 
-**Version**: 1.1.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-16
+**Version**: 2.0.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-17

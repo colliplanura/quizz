@@ -72,7 +72,8 @@ class _GamePageState extends State<GamePage> {
                   Text(state.mensagem),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<GameBloc>().add(const GameStarted()),
+                    onPressed: () =>
+                        context.read<GameBloc>().add(const GameStarted()),
                     child: Text('retry'.tr()),
                   ),
                 ],
@@ -89,14 +90,23 @@ class _GamePageState extends State<GamePage> {
   }
 
   Widget _buildGameUI(BuildContext context, GameRunning state) {
-    final letrasAlfabeto = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    final temDigito = state.pergunta.resposta
+        .split('')
+        .any((c) => RegExp(r'[0-9]').hasMatch(c));
+    final letrasAlfabeto = [
+      ...'abcdefghijklmnopqrstuvwxyz'.split(''),
+      if (temDigito) ...'0123456789'.split(''),
+    ];
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           Semantics(
-            label: 'Erros consecutivos: ${state.partida.errosConsecutivos} de ${GameConstants.maxErrosConsecutivos}',
-            child: ExcludeSemantics(child: ErrorBar(errosAtuais: state.partida.errosConsecutivos)),
+            label:
+                'Erros consecutivos: ${state.partida.errosConsecutivos} de ${GameConstants.maxErrosConsecutivos}',
+            child: ExcludeSemantics(
+              child: ErrorBar(errosAtuais: state.partida.errosConsecutivos),
+            ),
           ),
           const SizedBox(height: 24),
           PalavrasDisplay(
@@ -117,15 +127,16 @@ class _GamePageState extends State<GamePage> {
               runSpacing: 8,
               alignment: WrapAlignment.center,
               children: letrasAlfabeto.map((letra) {
-                final adivinhada = state.partida.letrasAdivinhadas.contains(letra);
+                final adivinhada = state.partida.letrasAdivinhadas.contains(
+                  letra,
+                );
                 final errada = state.partida.letrasErradas.contains(letra);
                 return LetraButton(
                   letra: letra,
                   habilitada: !adivinhada && !errada,
                   acertou: adivinhada,
-                  onPressed: () => context
-                      .read<GameBloc>()
-                      .add(GameLetterGuessed(letra)),
+                  onPressed: () =>
+                      context.read<GameBloc>().add(GameLetterGuessed(letra)),
                 );
               }).toList(),
             ),

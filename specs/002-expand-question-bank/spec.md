@@ -4,7 +4,7 @@
 > distribuição por 10 níveis de dificuldade, seleção aleatória adaptativa por nível,
 > regra anti-repetição por 2 horas de jogo e ajuste de tentativas de 3 para 5.
 
-**Feature Branch**: `002-create-new-spec`
+**Feature Branch**: `002-expand-question-bank-clean`
 
 **Created**: 2026-05-16
 
@@ -111,9 +111,8 @@ só ocorre no 5º erro consecutivo.
 - **FR-001**: O sistema DEVE disponibilizar uma base inicial com exatamente 1000
   perguntas válidas e utilizáveis.
 - **FR-002**: O sistema DEVE garantir variedade temática na base inicial,
-  evitando concentração excessiva em um único tema.
-- **FR-002a**: A base inicial DEVE conter no mínimo 10 categorias, cada uma com
-  pelo menos 50 perguntas válidas.
+  contendo no mínimo 10 categorias, cada uma com pelo menos 50 perguntas
+  válidas, evitando concentração excessiva em um único tema.
 - **FR-003**: Cada pergunta DEVE possuir classificação de dificuldade inteira
   entre 1 e 10.
 - **FR-004**: O sistema DEVE selecionar perguntas de forma aleatória entre as
@@ -148,20 +147,23 @@ só ocorre no 5º erro consecutivo.
 
 - **NFR-001**: A lógica de seleção e anti-repetição deve ser previsível e
   auditável por testes automatizados de regras de negócio.
-- **NFR-002**: A experiência de sorteio de nova pergunta deve ocorrer sem atraso
-  perceptível ao jogador em uso normal.
+- **NFR-002**: O sorteio e carregamento da próxima pergunta DEVEM concluir em até
+  200ms no p95, medidos em dispositivo alvo com 30 execuções consecutivas por
+  cenário de nível (baixo, médio e alto).
 - **NFR-003**: A especificação e documentação relacionadas a essa feature devem
   permanecer em Português (Brasil), com linguagem clara.
 
 ### Key Entities *(include if feature involves data)*
 
-- **PerguntaBase**: Item de conteúdo jogável com enunciado, resposta,
+> **Nota**: Definições formais de schema, validações e relacionamentos em [`data-model.md`](data-model.md).
+
+- **PerguntaCatalogo** (formal name in data-model.md): Item de conteúdo jogável com enunciado, resposta,
   classificação de dificuldade (1 a 10) e metadados de categoria.
-- **PerfilDeDificuldadePorNivel**: Regra de distribuição que define
+- **PerfilDistribuicaoDificuldade** (formal name in data-model.md): Regra de distribuição que define
   predominância esperada de faixas de dificuldade por nível do jogador.
-- **HistoricoRecenteDePerguntas**: Registro temporal das perguntas já
+- **HistoricoPerguntaRespondida** (formal name in data-model.md): Registro temporal das perguntas já
   respondidas por jogador para bloquear repetição por 2 horas de jogo.
-- **ConfiguracaoDePartida**: Conjunto de parâmetros ativos da sessão,
+- **ConfiguracaoPartida** (formal name in data-model.md): Conjunto de parâmetros ativos da sessão,
   incluindo limite de erros consecutivos antes de game over.
 
 ## Success Criteria *(mandatory)*
@@ -172,10 +174,12 @@ só ocorre no 5º erro consecutivo.
   classificadas de 1 a 10.
 - **SC-001a**: A base inicial valida no mínimo 10 categorias com pelo menos 50
   perguntas por categoria.
-- **SC-002**: Em amostragem representativa de partidas nos níveis 1 a 3, ao
-  menos 70% das perguntas sorteadas pertencem às faixas de dificuldade 1 a 3.
-- **SC-003**: Em amostragem representativa de partidas nos níveis 8 a 10, ao
-  menos 70% das perguntas sorteadas pertencem às faixas de dificuldade 8 a 10.
+- **SC-002**: Em 300 sorteios determinísticos (100 por nível para níveis 1, 2 e
+  3), ao menos 70% das perguntas sorteadas pertencem às faixas de dificuldade 1
+  a 3.
+- **SC-003**: Em 300 sorteios determinísticos (100 por nível para níveis 8, 9 e
+  10), ao menos 70% das perguntas sorteadas pertencem às faixas de dificuldade 8
+  a 10.
 - **SC-003a**: Nos cenários com escassez de perguntas da faixa alvo, 100% dos
   sorteios respeitam anti-repetição e mantêm seleção aleatória no pool
   elegível.

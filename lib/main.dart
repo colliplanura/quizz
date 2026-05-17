@@ -12,15 +12,19 @@ import 'data/repositories/progresso_repository_impl.dart';
 import 'data/repositories/sync_repository_impl.dart';
 import 'config/localization.dart';
 import 'domain/usecases/advance_level.dart';
+import 'domain/usecases/anti_repeticao_usecase.dart';
 import 'domain/usecases/check_answer.dart';
 import 'domain/usecases/continue_game.dart';
 import 'domain/usecases/game_over.dart';
+import 'domain/usecases/game_over_usecase.dart';
 import 'domain/usecases/play_game.dart';
+import 'domain/usecases/selecionar_pergunta.dart';
 import 'domain/usecases/sync_questions.dart';
 import 'presentation/bloc/game_bloc.dart';
 import 'presentation/bloc/game_event.dart';
 import 'presentation/pages/game_page.dart';
 import 'data/datasources/local/hive_service.dart';
+import 'data/datasources/local/historico_pergunta_local_datasource.dart';
 import 'services/sync_service.dart';
 
 Future<void> main() async {
@@ -31,9 +35,7 @@ Future<void> main() async {
   await Hive.initFlutter(dir.path);
   await HiveService.inicializar();
 
-  runApp(
-    QuizVerseApp(gameBloc: _criarGameBloc()),
-  );
+  runApp(QuizVerseApp(gameBloc: _criarGameBloc()));
 }
 
 GameBloc _criarGameBloc() {
@@ -46,21 +48,32 @@ GameBloc _criarGameBloc() {
     perguntaRepository: perguntaRepository,
   );
   final syncQuestions = SyncQuestions(syncRepository);
+  final historicoPerguntaDatasource = HistoricoPerguntaLocalDatasource();
+  final selecionarPergunta = SelecionarPergunta(
+    historicoDatasource: historicoPerguntaDatasource,
+  );
 
   return GameBloc(
     playGame: PlayGame(
       perguntaRepository: perguntaRepository,
       progressoRepository: progressoRepository,
+      selecionarPergunta: selecionarPergunta,
     ),
     checkAnswer: CheckAnswer(),
     advanceLevel: AdvanceLevel(
       perguntaRepository: perguntaRepository,
       progressoRepository: progressoRepository,
+      selecionarPergunta: selecionarPergunta,
     ),
     gameOver: GameOver(progressoRepository: progressoRepository),
+    gameOverUseCase: GameOverUseCase(progressoRepository: progressoRepository),
+    antiRepeticaoUseCase: AntiRepeticaoUseCase(
+      historicoDatasource: historicoPerguntaDatasource,
+    ),
     continueGame: ContinueGame(
       perguntaRepository: perguntaRepository,
       progressoRepository: progressoRepository,
+      selecionarPergunta: selecionarPergunta,
     ),
     syncService: SyncService(syncQuestions),
   )..add(const GameStarted());

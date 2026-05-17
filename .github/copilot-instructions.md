@@ -1,14 +1,14 @@
 	<!-- SPECKIT START -->
 	For additional context about technologies to be used, project structure,
 	shell commands, and other important information, read the current plan at:
-	`specs/001-quizverse-forca/plan.md`
+	`specs/002-expand-question-bank/plan.md`
 
 	Supporting documents:
-	- Specification: `specs/001-quizverse-forca/spec.md` (P1/P2/P3 user stories, requirements)
-	- Data Model: `specs/001-quizverse-forca/data-model.md` (entity definitions, schema)
-	- GitHub API Contract: `specs/001-quizverse-forca/contracts/api-github.md` (sync interface)
-	- Quickstart: `specs/001-quizverse-forca/quickstart.md` (dev environment setup)
-	- Constitution: `.specify/memory/constitution.md` (governance, principles v1.1.0)
+	- Specification: `specs/002-expand-question-bank/spec.md` (P1/P2/P3 user stories, requirements)
+	- Data Model: `specs/002-expand-question-bank/data-model.md` (entity definitions, schema)
+	- Question Contract: `specs/002-expand-question-bank/contracts/question-catalog.md` (catalog and selection rules)
+	- Quickstart: `specs/002-expand-question-bank/quickstart.md` (dev environment setup)
+	- Constitution: `.specify/memory/constitution.md` (governance, principles v2.0.0)
 
 	Key technical decisions:
 	- Flutter 3.x + Dart 3.x (Mobile iOS/Android)
@@ -17,7 +17,9 @@
 	- Hive 2.x for local offline-first storage
 	- easy_localization for PT-BR/EN/IT support
 	- GitHub raw endpoint for question sync (24h or on level-up)
-	- >= 90% test coverage of game rules (mandatory per Princípio III)
+	- Weighted random difficulty distribution by game level
+	- Anti-repetition window of 2h (wall-clock) with history reset fallback
+	- Game over only at 5 consecutive errors (Princípio V)
 
-	All documentation is in Portuguese (Brasil) per constitution v1.1.0.
+	All documentation is in Portuguese (Brasil) per constitution v2.0.0.
 	<!-- SPECKIT END -->

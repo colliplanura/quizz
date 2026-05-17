@@ -1,93 +1,55 @@
 # Research Summary: QuizVerse: Forca
 
-**Phase**: Phase 0 (Minimal Research)  
-**Date**: 2026-05-16  
-**Status**: Complete (all clarifications resolved in `/speckit.clarify`)
+**Phase**: Phase 0 (Research)
+**Date**: 2026-05-17
+**Status**: Complete
 
----
+## Decisões
 
-## Executive Summary
+### 1. Modelo de usuário local/anônimo
 
-Nenhuma pesquisa adicional foi necessária. Todas as 5 questões de esclarecimento
-críticas foram respondidas durante a fase de `/speckit.clarify` (2026-05-16),
-eliminando ambiguidades que poderiam bloquear a implementação.
+- Decision: Não haverá conta, login ou backend de usuário em P1.
+- Rationale: Preserva offline-first, reduz complexidade e remove dependências de autenticação.
+- Alternatives considered: Conta opcional por e-mail; login social; backend próprio.
 
-As decisões clarificadas alinharam-se 100% com a constituição v1.1.0 e
-estabeleceram fundação firme para Phase 1 (design) e Phase 2 (tasks).
+### 2. Estado inicial de jogo
 
----
+- Decision: Estado inicial fixo em nível 1, pontuação 0 e 1 troféu.
+- Rationale: Garante onboarding justo e permite primeira continuidade pós-Game Over.
+- Alternatives considered: Começar sem troféus; troféus aleatórios; estado inicial configurável.
 
-## Clarifications Resolved
+### 3. Regra de progressão e Game Over
 
-### 1. User Model Architecture
-**Question**: Requer autenticação ou contas de usuário?  
-**Resolution**: Não. Modelo totalmente local/anônimo. Progresso armazenado
-apenas no dispositivo. Sem backend necessário (alinha com offline-first).  
-**Impact**: Simplifica P1/P2, reduz surface de segurança, adia accounts para P4+.
+- Decision: Level-up a cada 10 acertos; Game Over no 5º erro consecutivo.
+- Rationale: Alinhamento com a constituição v2.0.0 (Princípio V).
+- Alternatives considered: Game Over com 3 erros; dificuldade dinâmica sem limiar fixo.
 
-### 2. Initial Player State
-**Question**: Com qual nível/pontuação/troféus o jogador começa?  
-**Resolution**: Nível 1, Pontuação 0, 1 Troféu inicial.  
-**Impact**: Oferece experiência justa na primeira partida, melhora engajamento,
-permite "continue" gratuito após primeiro Game Over.
+### 4. Estrutura de contexto educativo multilíngue
 
-### 3. Scale Limits
-**Question**: Quantos níveis máximo? Quantas perguntas?  
-**Resolution**: Unlimited levels, pool de 500–1000 perguntas.  
-**Impact**: Suporta progressão indefinida, encaixa em budgets de storage
-(< 10 MB), permite conteúdo fresh via GitHub sync sem saturação.
+- Decision: `contexto_historico` como objeto por idioma (`pt_BR`, `en`, `it`) com fallback obrigatório para `pt_BR`.
+- Rationale: Simplifica validação e renderização sem quebra de experiência.
+- Alternatives considered: Contexto em string única; tradução sob demanda via serviço externo.
 
-### 4. Educational Context Format
-**Question**: Diretrizes para o contexto "1-2 frases"?  
-**Resolution**: Rigoroso: 1-2 sentences, máximo 120 caracteres por idioma.
-Truncar se exceder, logar aviso durante sync.  
-**Impact**: Simplifica teste de localização, evita overflow de UI, torna
-validação determinística.
+### 5. Política de sincronização de conteúdo
 
-### 5. Security & Privacy Posture
-**Question**: Criptografia local? Crash reporting? Privacy policy?  
-**Resolution**: Minimal para P1. HTTPS para GitHub only. Sem criptografia
-local, sem telemetria, sem privacy policy obrigatória.  
-**Impact**: Elimina complexidade P1, adia features de privacidade para P3+,
-mantém superfície de ataque mínima.
+- Decision: Sincronização silenciosa em background a cada 24h ou ao subir nível, com merge idempotente.
+- Rationale: Conteúdo atualizado sem interromper gameplay e sem corromper cache local.
+- Alternatives considered: Sync apenas ao abrir app; sync manual pelo usuário.
 
----
+### 6. Tratamento de payload inválido
 
-## Technical Decisions Ratified
+- Decision: Se 100% do payload estiver inválido, manter cache local e registrar erro sem modal bloqueante.
+- Rationale: Resiliência operacional e continuidade de jogo offline-first.
+- Alternatives considered: Bloquear jogo até nova sync válida; limpar cache local.
 
-| Aspecto | Decisão | Justificativa |
-|---------|---------|---------------|
-| Linguagem | Flutter 3.x + Dart 3.x | Obrigatória por constituição, multi-platform |
-| Storage | Hive 2.x (ou SQLite) | Offline-first, sem dependência de backend |
-| State Mgmt | BLoC 8.x ou Riverpod 2.x | Ambos atendem Princípio III (testabilidade) |
-| Localization | easy_localization 3.x | Suporta 3 idiomas, fallback automático |
-| API | GitHub raw endpoint | Sem backend, source única de verdade |
-| Sync Strategy | Background task (24h ou level-up) | Assíncrono, silencioso, idempotente |
-| Security P1 | HTTPS only, sem encryption | Minimal scope para MVP, P3+ enhancements |
-| Testing | Unit (domain), widget, integration | >= 90% cobertura regras críticas |
+### 7. Segurança e privacidade para P1
 
----
+- Decision: HTTPS obrigatório, sem telemetria/crash reporting/criptografia local em P1.
+- Rationale: Escopo enxuto para MVP, mantendo superfície de risco controlada.
+- Alternatives considered: Criptografia local imediata; crash analytics desde P1.
 
-## No Blockers Identified
+## Resultado
 
-✅ Todas as dependências externas (Flutter, GitHub API) são públicas e
-documentadas.  
-✅ Modelos de dados clarificados (schema, constraints).  
-✅ Fluxos críticos (game rules, sync, localization) têm acceptance criteria
-testáveis.  
-✅ Constituição v1.1.0 não apresenta conflitos com decisões técnicas.  
-
----
-
-## Ready for Phase 1: Design
-
-Com todas as clarificações integradas:
-- **data-model.md**: Definir entities e schema
-- **contracts/api-github.md**: Documentar formato esperado
-- **contracts/ui-accessibility.md**: Diretrizes WCAG AA
-- **quickstart.md**: Setup inicial
-- **Agent context update**: Referenciar plan em copilot-instructions.md
-
----
-
-**Research Phase Complete**. Proceed to Phase 1 (Design).
+- Nenhum item NEEDS CLARIFICATION remanescente.
+- Direção técnica e critérios de validação definidos para Phase 1.
+- Conformidade com constituição v2.0.0 confirmada.

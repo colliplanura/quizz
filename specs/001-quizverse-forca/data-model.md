@@ -80,7 +80,7 @@ troféus).
 | `pontuacao_total` | Integer | required, >= 0 | 1250 |
 | `trofeus_ganhos` | Integer | required, >= 0, can decrease (gasto em continue) | 3 |
 | `acertos_consecutivos` | Integer | required, [0–10] | 7 |
-| `erros_consecutivos` | Integer | required, [0–3] | 1 |
+| `erros_consecutivos` | Integer | required, [0–5] | 1 |
 | `timestamp_ultima_sincronizacao` | DateTime | required, RFC 3339 | "2026-05-16T10:00:00Z" |
 | `partida_ativa` | Object | optional (null se no partida, or Partida object) | {...} |
 | `data_atualizacao` | DateTime | required, RFC 3339 | "2026-05-16T14:30:00Z" |
@@ -88,7 +88,7 @@ troféus).
 **State Transitions**:
 
 - Nível aumenta quando `acertos_consecutivos == 10`
-- Game Over quando `erros_consecutivos == 3`
+- Game Over quando `erros_consecutivos == 5`
 - Continue gasta 1 troféu, mantém nível/pontuação
 - Restart retorna ao nível 1, pontuação 0, sem gasto de troféu
 
@@ -128,7 +128,7 @@ pergunta, histórico de respostas, erros nesta partida).
 | `id` | String | PK, UUID | "c0ffee00-0000-0000-0000-000000000001" |
 | `nivel` | Integer | required, >= 1 | 5 |
 | `acertos_neste_nivel` | Integer | required, [0–10] | 7 |
-| `erros_consecutivos` | Integer | required, [0–3] | 1 |
+| `erros_consecutivos` | Integer | required, [0–5] | 1 |
 | `pergunta_atual_id` | String | required, FK to Pergunta.id | "550e8400-e29b-41d4-a716-446655440000" |
 | `letras_adivinhas` | Array<String> | required, each 1 char | ["R", "O", "M"] |
 | `letras_erradas` | Array<String> | required, each 1 char | ["A"] |
@@ -385,7 +385,7 @@ CREATE INDEX idx_pergunta_dificuldade ON perguntas(dificuldade);
 - `pontuacao_total`: >= 0
 - `trofeus_ganhos`: >= 0
 - `acertos_consecutivos`: [0–10]
-- `erros_consecutivos`: [0–3]
+- `erros_consecutivos`: [0–5]
 
 ### Partida
 

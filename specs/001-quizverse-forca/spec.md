@@ -10,7 +10,7 @@
 
 **Status**: Final
 
-**Input**: Descrição da constituição v1.1.0, governa flutter mobile-first,
+**Input**: Descrição da constituição v2.0.0, governa flutter mobile-first,
 offline-first, estado testável, comunicação clara em português (Brasil), e
 conteúdo confiável com progressão justa.
 
@@ -72,7 +72,7 @@ de forma previsível, e oferecer uma experiência fluida e offline.
 
 **Independent Test**: Um jogador pode abrir o app sem internet, completar uma
 partida inteira do Forca (do nível 1 até um nível mais avançado), e o progresso
-é salvo automaticamente. O jogo encerra corretamente com Game Over após 3 erros
+é salvo automaticamente. O jogo encerra corretamente com Game Over após 5 erros
 consecutivos, oferecendo a opção de continuar (gastando 1 troféu) ou reiniciar
 (retornando ao nível 1 e zerrando pontuação).
 
@@ -82,7 +82,7 @@ consecutivos, oferecendo a opção de continuar (gastando 1 troféu) ou reinicia
    app e vê a tela inicial, **Then** o cache local de perguntas é carregado e a
    primeira pergunta aparece em menos de 2 segundos.
 
-2. **Given** uma pergunta está exibida com a barra de erros (inicialmente 0/3),
+2. **Given** uma pergunta está exibida com a barra de erros (inicialmente 0/5),
    **When** o jogador adivinha uma letra correta, **Then** a letra aparece nas
    posições corretas e o contador de acertos é incrementado em 1.
 
@@ -91,7 +91,7 @@ consecutivos, oferecendo a opção de continuar (gastando 1 troféu) ou reinicia
    dificuldade das próximas perguntas aumenta, e uma mensagem de celebração
    aparece.
 
-4. **Given** o jogador errou 3 vezes consecutivas, **When** comete o 3º erro,
+4. **Given** o jogador errou 5 vezes consecutivas, **When** comete o 5º erro,
    **Then** a tela de Game Over aparece mostrando pontuação final e oferecendo
    "Continuar (1 troféu)" ou "Reiniciar".
 
@@ -240,7 +240,7 @@ para português (Brasil) sem erros.
 
 - **FR-003**: Sistema DEVE incrementar o contador de acertos ao acertar uma
   pergunta e incrementar contador de erros consecutivos ao errar. Após 10
-  acertos, o nível deve incrementar; após 3 erros consecutivos, Game Over.
+  acertos, o nível deve incrementar; após 5 erros consecutivos, Game Over.
 
 - **FR-004**: Sistema DEVE exibir contexto educativo curto após cada acerto ou
   erro. O campo `contexto_historico` deve ser estruturado por idioma
@@ -269,7 +269,7 @@ para português (Brasil) sem erros.
   cache local. Se 100% do payload estiver inválido, DEVE manter o cache atual,
   registrar erro e seguir sem alerta modal.
 
-- **FR-010**: Sistema DEVE oferecer animação visual da barra de erros (0 a 3
+- **FR-010**: Sistema DEVE oferecer animação visual da barra de erros (0 a 5
   erros) e celebração ao avançar de nível ou terminar partida com sucesso.
 
 ### Non-Functional Requirements
@@ -341,9 +341,10 @@ para português (Brasil) sem erros.
 
 ### Measurable Outcomes
 
-- **SC-001**: Um jogador pode completar uma partida inteira (acertar 10
-  perguntas e avançar de nível) em menos de 5 minutos sem internet. Sistema
-  responde em < 1 segundo por pergunta.
+- **SC-001**: Em cenário offline controlado, com seed fixa e 100 interações
+  automatizadas, 100% das mudanças de pergunta ocorrem em < 1 segundo e 100% dos
+  eventos de progressão (10 acertos para level-up) são aplicados sem perda de
+  estado.
 
 - **SC-002**: Sincronização de novas perguntas ocorre de forma silenciosa (zero
   notificações visíveis), e o jogo não interrompe por mais de 100ms durante
@@ -355,11 +356,12 @@ para português (Brasil) sem erros.
   por teste automatizado de resiliência (T053, T080).
 
 - **SC-004**: Todas as strings de UI carregam corretamente em Português
-  (Brasil), Inglês e Italiano. Fallback para Português (Brasil) ocorre sem
-  erros em < 10ms.
+  (Brasil), Inglês e Italiano. Em benchmark de 100 resoluções de chave ausente,
+  fallback para Português (Brasil) ocorre sem erros e com p95 <= 10ms.
 
-- **SC-005**: Progresso de jogo é persistido em < 100ms. Reload após crash
-  recupera estado exatamente (0% perda de progresso).
+- **SC-005**: Em benchmark de 100 operações de persistência de progresso,
+  latência p95 <= 100ms. Reload após crash recupera estado exatamente (0% perda
+  de progresso).
 
 - **SC-006**: Game Over oferece duas opções (continuar com troféu, reiniciar) e
   ambas funcionam corretamente 100% das vezes (sem travamentos ou corrupção de
