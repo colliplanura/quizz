@@ -8,7 +8,7 @@
 
 **Created**: 2026-05-16
 
-**Status**: Draft
+**Status**: Final
 
 **Input**: Descrição da constituição v1.1.0, governa flutter mobile-first,
 offline-first, estado testável, comunicação clara em português (Brasil), e
@@ -39,6 +39,22 @@ conteúdo confiável com progressão justa.
   no local encryption, no privacy policy needed. Aligns with simplicity; add
   privacy features in P3+.
 
+- Q: Como modelar `contexto_historico` para multi-idioma? → A: Objeto por
+  idioma no payload (`pt_BR`, `en`, `it`) com fallback obrigatório para `pt_BR`
+  quando uma chave estiver ausente.
+
+- Q: O que fazer se 100% do payload de sincronização vier inválido? → A:
+  Manter o cache local atual, registrar erro e continuar o jogo sem alerta
+  modal.
+
+- Q: O que acontece no Game Over quando o jogador tem 0 troféus? → A:
+  Desabilitar "Continuar", exibir mensagem curta e permitir apenas
+  "Reiniciar".
+
+- Q: Como tratar primeira execução sem cache local de perguntas? → A:
+  Embutir um conjunto mínimo de perguntas locais no app para primeiro uso
+  offline.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Jogar Forca Offline (Priority: P1)
@@ -66,7 +82,7 @@ consecutivos, oferecendo a opção de continuar (gastando 1 troféu) ou reinicia
    app e vê a tela inicial, **Then** o cache local de perguntas é carregado e a
    primeira pergunta aparece em menos de 2 segundos.
 
-2. **Given** uma pergunta está exibida com a barra de erros (inicialmente 0/6),
+2. **Given** uma pergunta está exibida com a barra de erros (inicialmente 0/3),
    **When** o jogador adivinha uma letra correta, **Then** a letra aparece nas
    posições corretas e o contador de acertos é incrementado em 1.
 
@@ -197,9 +213,13 @@ para português (Brasil) sem erros.
   ou `pergunta`. O app rejeita a entrada, loga o erro, e não deixa o jogador
   ficar sem perguntas.
 
+- **Payload totalmente inválido na sincronização**: Se 100% das entradas de
+  `perguntas.json` forem inválidas, o app mantém o cache local atual, registra
+  erro e continua o jogo sem exibir alerta modal.
+
 - **Troféu insuficiente para continuar**: O jogador tenta continuar após Game
-  Over mas tem 0 troféus. O app oferece alternativas (p. ex., assistir um vídeo
-  publicitário, ou reiniciar e ganhar um troféu bônus ao atingir certo nível).
+  Over mas tem 0 troféus. O app desabilita "Continuar", exibe mensagem curta
+  explicativa e permite apenas "Reiniciar".
 
 - **Jogador fecha o app durante sincronização**: O app deve salvar qualquer
   novo dado já recebido, fechar a conexão graciosamente, e na próxima abertura
@@ -210,7 +230,8 @@ para português (Brasil) sem erros.
 ### Functional Requirements
 
 - **FR-001**: Sistema DEVE permitir ao jogador jogar Forca completamente offline,
-  usando cache local de perguntas, progresso e pontuação.
+  usando cache local de perguntas, progresso e pontuação. Na primeira execução,
+  sem cache prévio, DEVE carregar um conjunto mínimo embarcado de perguntas.
 
 - **FR-002**: Sistema DEVE sincronizar novas perguntas do GitHub
   (`https://github.com/colliplanura/quizz/perguntas.json` ou raw endpoint) de
@@ -222,12 +243,15 @@ para português (Brasil) sem erros.
   acertos, o nível deve incrementar; após 3 erros consecutivos, Game Over.
 
 - **FR-004**: Sistema DEVE exibir contexto educativo curto após cada acerto ou
-  erro. Formato: 1-2 sentences, máximo 120 caracteres por idioma. Se conteúdo
-  exceder, truncar com "..." e logar aviso. Simplifica localização e validação.
+  erro. O campo `contexto_historico` deve ser estruturado por idioma
+  (`pt_BR`, `en`, `it`) com fallback obrigatório para `pt_BR`. Formato por
+  idioma: 1-2 sentences, máximo 120 caracteres. Se conteúdo exceder, truncar
+  com "..." e logar aviso. Simplifica localização e validação.
 
 - **FR-005**: Sistema DEVE permitir ao jogador continuar após Game Over pagando
   1 troféu (mantendo nível e pontuação) ou reiniciar (retornando ao nível 1,
-  pontuação zero, sem gasto de troféu).
+  pontuação zero, sem gasto de troféu). Quando o jogador tiver 0 troféus,
+  "Continuar" DEVE ficar desabilitado com mensagem explicativa.
 
 - **FR-006**: Sistema DEVE suportar no mínimo Português (Brasil), Inglês e
   Italiano na UI, com fallback automático para Português (Brasil) se tradução
@@ -242,15 +266,17 @@ para português (Brasil) sem erros.
 
 - **FR-009**: Sistema DEVE validar integridade de perguntas sincronizadas
   (campos obrigatórios presentes e formatação correta) antes de integrar ao
-  cache local.
+  cache local. Se 100% do payload estiver inválido, DEVE manter o cache atual,
+  registrar erro e seguir sem alerta modal.
 
-- **FR-010**: Sistema DEVE oferecer animação visual da barra de erros (0 a 6
+- **FR-010**: Sistema DEVE oferecer animação visual da barra de erros (0 a 3
   erros) e celebração ao avançar de nível ou terminar partida com sucesso.
 
 ### Non-Functional Requirements
 
-- **NFR-001**: Toda interface voltada ao usuário deve suportar, no mínimo,
-  Português (Brasil), Inglês e Italiano, com fallback automático.
+- **NFR-001**: Mudanças de idioma devem refletir em todas as telas sem exigir
+  reinício do app, mantendo fallback automático para Português (Brasil) quando
+  faltar tradução.
 
 - **NFR-002**: A documentação do projeto (specs, plans, tarefas, README) deve
   ser escrita em Português (Brasil) e manter linguagem clara, concisa e sem
@@ -274,7 +300,8 @@ para português (Brasil) sem erros.
 
 - **NFR-007**: O app deve tolerar perda de rede durante sincronização sem
   corromper progresso ou cache local. Falhas devem ser registradas em log para
-  retry assíncrono.
+  retry assíncrono. Em caso de payload 100% inválido, deve manter cache local e
+  continuar execução sem bloqueio de UI.
 
 - **NFR-008**: Carregamento de pergunta inicial e mudança de pergunta devem
   ocorrer em menos de 1 segundo (percepção de snappiness).
@@ -291,8 +318,8 @@ para português (Brasil) sem erros.
 ### Key Entities
 
 - **Pergunta**: {id, pergunta, resposta (normalizada), exibicao_resposta
-  (display), categoria, dificuldade (1-10 escala), contexto_historico}. Fonte:
-  JSON do GitHub. Armazenagem: SQLite/Hive local.
+  (display), categoria, dificuldade (1-10 escala), contexto_historico
+  {pt_BR, en, it}}. Fonte: JSON do GitHub. Armazenagem: SQLite/Hive local.
 
 - **Progresso do Jogador**: {nível_atual, pontuação_total, acertos_consecutivos,
   erros_consecutivos, troféus_ganhos, partida_ativa (dados da partida em
@@ -322,9 +349,10 @@ para português (Brasil) sem erros.
   notificações visíveis), e o jogo não interrompe por mais de 100ms durante
   sincronização.
 
-- **SC-003**: 95% das tentativas de sincronização (a cada 24h ou level-up)
-  completam com sucesso. Falhas são registradas e a próxima tentativa retoma
-  corretamente sem corromper dados.
+- **SC-003**: Falhas de sincronização (rede indisponível ou payload inválido)
+  são registradas em log, o cache local é preservado intacto, e a próxima
+  tentativa é agendada corretamente (próximo level-up ou +24h). Verificável
+  por teste automatizado de resiliência (T053, T080).
 
 - **SC-004**: Todas as strings de UI carregam corretamente em Português
   (Brasil), Inglês e Italiano. Fallback para Português (Brasil) ocorre sem
@@ -363,6 +391,10 @@ para português (Brasil) sem erros.
   sincronização inicial e updates de conteúdo, mas jogam majoritariamente
   offline.
 
+- **Primeiro uso offline**: O app inclui um conjunto mínimo de perguntas
+  embarcado para permitir jogar imediatamente sem internet na primeira
+  execução.
+
 - **Arquitetura Flutter**: App é Flutter 3.x ou superior, com BLoC ou Riverpod
   para state management, Hive ou SQLite para persistência local, e
   easy_localization ou similar para multi-idioma. (Detalhes de framework serão
@@ -371,14 +403,15 @@ para português (Brasil) sem erros.
 - **GitHub como fonte única de verdade**: O arquivo `perguntas.json` no
   repositório GitHub é a fonte única e confiável para novas perguntas. Formato
   é JSON com estrutura [{id, pergunta, resposta, exibicao_resposta, categoria,
-  dificuldade, contexto_historico}, ...]. Pool target: 500–1000 perguntas
-  totais. Sem cap em níveis (progressão infinita suportada).
+  dificuldade, contexto_historico: {pt_BR, en, it}}, ...]. Pool target:
+  500–1000 perguntas totais. Sem cap em níveis (progressão infinita suportada).
 
 - **Formato do Contexto Educativo**: Cada pergunta deve ter um campo
-  `contexto_historico` com máximo 120 caracteres por idioma, contendo 1-2
-  sentences. Se conteúdo exceder, será truncado na exibição (com "...") e um
-  aviso será logado durante sincronização. Garante consistência de UI e
-  simplifica localização.
+  `contexto_historico` como objeto por idioma (`pt_BR`, `en`, `it`), com máximo
+  120 caracteres por idioma, contendo 1-2 sentences. Se a chave do idioma
+  ativo não existir, usar `pt_BR` como fallback automático. Se conteúdo exceder,
+  será truncado na exibição (com "...") e um aviso será logado durante
+  sincronização. Garante consistência de UI e simplifica localização.
 
 - **Limite de troféus**: Troféus podem ser gastos apenas ao continuar após Game
   Over. Outras formas de ganhar troféus (vídeos ad, bônus de nível, daily

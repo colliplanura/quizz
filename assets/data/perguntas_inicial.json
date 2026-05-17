@@ -1,0 +1,170 @@
+[
+  {
+    "id": "00000000-0000-0000-0000-000000000001",
+    "pergunta": "Qual é a capital da Itália?",
+    "resposta": "roma",
+    "exibicao_resposta": "Roma",
+    "categoria": "geografia",
+    "dificuldade": 2,
+    "contexto_historico": {
+      "pt_BR": "Roma foi fundada em 753 aC no Lácio.",
+      "en": "Rome was founded in 753 BC in Latium.",
+      "it": "Roma fu fondata nel 753 a.C. nel Lazio."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000002",
+    "pergunta": "Qual é o maior planeta do nosso sistema solar?",
+    "resposta": "jupiter",
+    "exibicao_resposta": "Júpiter",
+    "categoria": "ciência",
+    "dificuldade": 2,
+    "contexto_historico": {
+      "pt_BR": "Júpiter é o maior planeta, 11x maior que Terra.",
+      "en": "Jupiter is the largest planet, 11x bigger than Earth.",
+      "it": "Giove è il pianeta più grande, 11 volte la Terra."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000003",
+    "pergunta": "Qual é o país mais populoso do mundo?",
+    "resposta": "china",
+    "exibicao_resposta": "China",
+    "categoria": "geografia",
+    "dificuldade": 1,
+    "contexto_historico": {
+      "pt_BR": "A China tem mais de 1,4 bilhão de habitantes.",
+      "en": "China has over 1.4 billion inhabitants.",
+      "it": "La Cina ha oltre 1,4 miliardi di abitanti."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000004",
+    "pergunta": "Quem pintou a Mona Lisa?",
+    "resposta": "davinci",
+    "exibicao_resposta": "Da Vinci",
+    "categoria": "cultura",
+    "dificuldade": 2,
+    "contexto_historico": {
+      "pt_BR": "Leonardo da Vinci pintou a Mona Lisa entre 1503 e 1519.",
+      "en": "Leonardo da Vinci painted the Mona Lisa between 1503 and 1519.",
+      "it": "Leonardo da Vinci dipinse la Monna Lisa tra il 1503 e il 1519."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000005",
+    "pergunta": "Qual é o elemento mais abundante na crosta terrestre?",
+    "resposta": "oxigenio",
+    "exibicao_resposta": "Oxigênio",
+    "categoria": "ciência",
+    "dificuldade": 3,
+    "contexto_historico": {
+      "pt_BR": "O oxigênio representa cerca de 46% da massa da crosta terrestre.",
+      "en": "Oxygen represents about 46% of the Earth's crust by mass.",
+      "it": "L'ossigeno rappresenta circa il 46% della crosta terrestre in massa."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000006",
+    "pergunta": "Em que ano o homem pisou na Lua pela primeira vez?",
+    "resposta": "1969",
+    "exibicao_resposta": "1969",
+    "categoria": "história",
+    "dificuldade": 2,
+    "contexto_historico": {
+      "pt_BR": "Neil Armstrong foi o primeiro humano a caminhar na Lua em julho de 1969.",
+      "en": "Neil Armstrong was the first human to walk on the Moon in July 1969.",
+      "it": "Neil Armstrong fu il primo uomo a camminare sulla Luna nel luglio 1969."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000007",
+    "pergunta": "Qual é o rio mais longo do mundo?",
+    "resposta": "nilo",
+    "exibicao_resposta": "Nilo",
+    "categoria": "geografia",
+    "dificuldade": 3,
+    "contexto_historico": {
+      "pt_BR": "O rio Nilo tem cerca de 6.650 km de extensão, percorrendo o nordeste da África.",
+      "en": "The Nile River stretches about 6,650 km across northeastern Africa.",
+      "it": "Il fiume Nilo si estende per circa 6.650 km nel nordest dell'Africa."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000008",
+    "pergunta": "Qual é a capital do Brasil?",
+    "resposta": "brasilia",
+    "exibicao_resposta": "Brasília",
+    "categoria": "geografia",
+    "dificuldade": 1,
+    "contexto_historico": {
+      "pt_BR": "Brasília foi inaugurada em 1960 e é a capital federal do Brasil.",
+      "en": "Brasília was inaugurated in 1960 and is Brazil's federal capital.",
+      "it": "Brasília fu inaugurata nel 1960 ed è la capitale federale del Brasile."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000009",
+    "pergunta": "Qual é a montanha mais alta do mundo?",
+    "resposta": "everest",
+    "exibicao_resposta": "Everest",
+    "categoria": "geografia",
+    "dificuldade": 2,
+    "contexto_historico": {
+      "pt_BR": "O Monte Everest tem 8.848 metros de altitude, no Himalaia.",
+      "en": "Mount Everest stands 8,848 meters tall in the Himalayas.",
+      "it": "Il Monte Everest è alto 8.848 metri e si trova nell'Himalaya."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000010",
+    "pergunta": "Qual é o menor país do mundo?",
+    "resposta": "vaticano",
+    "exibicao_resposta": "Vaticano",
+    "categoria": "geografia",
+    "dificuldade": 3,
+    "contexto_historico": {
+      "pt_BR": "O Vaticano tem apenas 0,44 km² e é sede da Igreja Católica.",
+      "en": "The Vatican covers just 0.44 km² and is the seat of the Catholic Church.",
+      "it": "Il Vaticano è esteso solo 0,44 km² ed è la sede della Chiesa Cattolica."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000011",
+    "pergunta": "Quantos ossos tem o corpo humano adulto?",
+    "resposta": "206",
+    "exibicao_resposta": "206",
+    "categoria": "ciência",
+    "dificuldade": 4,
+    "contexto_historico": {
+      "pt_BR": "O corpo humano adulto possui 206 ossos que compõem o esqueleto.",
+      "en": "The adult human body has 206 bones forming the skeleton.",
+      "it": "Il corpo umano adulto ha 206 ossa che compongono lo scheletro."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000012",
+    "pergunta": "Qual é o oceano mais profundo do mundo?",
+    "resposta": "pacifico",
+    "exibicao_resposta": "Pacífico",
+    "categoria": "geografia",
+    "dificuldade": 3,
+    "contexto_historico": {
+      "pt_BR": "O Oceano Pacífico é o maior e mais profundo, com a Fossa das Marianas a 11 km.",
+      "en": "The Pacific Ocean is the largest and deepest, with the Mariana Trench at 11 km deep.",
+      "it": "L'Oceano Pacifico è il più grande e profondo, con la Fossa delle Marianne a 11 km."
+    },
+    "data_criacao": "2026-05-16T00:00:00Z"
+  }
+]

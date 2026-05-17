@@ -57,7 +57,11 @@ GET https://raw.githubusercontent.com/colliplanura/quizz/refs/heads/main/pergunt
     "exibicao_resposta": "Roma",
     "categoria": "geografia",
     "dificuldade": 5,
-    "contexto_historico": "Roma foi fundada em 753 aC no Lácio.",
+    "contexto_historico": {
+      "pt_BR": "Roma foi fundada em 753 aC no Lácio.",
+      "en": "Rome was founded in 753 BC in Latium.",
+      "it": "Roma fu fondata nel 753 a.C. nel Lazio."
+    },
     "data_criacao": "2026-05-10T14:30:00Z"
   },
   {
@@ -67,7 +71,11 @@ GET https://raw.githubusercontent.com/colliplanura/quizz/refs/heads/main/pergunt
     "exibicao_resposta": "Júpiter",
     "categoria": "ciência",
     "dificuldade": 3,
-    "contexto_historico": "Júpiter é o maior planeta, 11x maior que Terra.",
+    "contexto_historico": {
+      "pt_BR": "Júpiter é o maior planeta, 11x maior que Terra.",
+      "en": "Jupiter is the largest planet, 11x bigger than Earth.",
+      "it": "Giove è il pianeta più grande, 11 volte la Terra."
+    },
     "data_criacao": "2026-05-11T09:00:00Z"
   }
 ]
@@ -148,10 +156,14 @@ Each question object MUST comply with this schema:
         "description": "Difficulty level"
       },
       "contexto_historico": {
-        "type": "string",
-        "minLength": 10,
-        "maxLength": 120,
-        "description": "Educational context (1-2 sentences, per clarification Q4)"
+        "type": "object",
+        "required": ["pt_BR"],
+        "properties": {
+          "pt_BR": { "type": "string", "minLength": 10, "maxLength": 120 },
+          "en":    { "type": "string", "minLength": 10, "maxLength": 120 },
+          "it":    { "type": "string", "minLength": 10, "maxLength": 120 }
+        },
+        "description": "Multilingual educational context; pt_BR mandatory fallback (per clarificação Q1)"
       },
       "data_criacao": {
         "type": "string",
@@ -181,8 +193,9 @@ When fetching and parsing:
    - `resposta`: lowercase, no accents, 1–50 chars
    - `exibicao_resposta`: match resposta semantically, with accents
    - `dificuldade`: 1–10 (reject if outside range)
-   - `contexto_historico`: 1–2 sentences, max 120 chars
-     - If > 120 chars: truncate with "...", log warning, but accept (graceful degradation)
+   - `contexto_historico`: objeto `{pt_BR, en, it}` — `pt_BR` obrigatório; cada valor 1–2 sentences, max 120 chars
+     - Fallback: se idioma ativo ausente, usar `pt_BR`
+     - Se valor do idioma ativo > 120 chars: truncar com "...", logar warning, aceitar (graceful degradation)
 
 3. **Uniqueness**:
    - Reject duplicates (same `id` → update local if newer `data_criacao`)

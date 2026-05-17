@@ -30,14 +30,14 @@ entidades para nuvem (progresso é local-only, perguntas são read-only).
 | `exibicao_resposta` | String | required, with accents for display | "Roma" |
 | `categoria` | String | required, enum: ["história", "geografia", "ciência", "cultura", "outro"] | "geografia" |
 | `dificuldade` | Integer | required, range [1–10] | 5 |
-| `contexto_historico` | String | required, 1-2 frases, max 120 chars (per clarificação Q4) | "Roma foi fundada em 753 aC no Lácio." |
+| `contexto_historico` | Map<String, String> | required, objeto `{pt_BR, en, it}`, `pt_BR` obrigatório; cada valor 1-2 frases, max 120 chars | `{"pt_BR": "Roma foi fundada em 753 aC no Lácio.", "en": "Rome was founded in 753 BC in Latium.", "it": "Roma fu fondata nel 753 a.C. nel Lazio."}` |
 | `data_criacao` | DateTime | optional, RFC 3339 | "2026-05-10T14:30:00Z" |
 
 **Normalization Rules**:
 
 - `resposta`: Converter para lowercase, remover acentos/diacríticos (á → a, é → e, etc.)
 - `exibicao_resposta`: Preservar formatação original com acentos
-- `contexto_historico`: Validar length <= 120 chars; truncar com "..." em UI se necessário, logar warning
+- `contexto_historico`: Objeto `{pt_BR, en, it}` — `pt_BR` é obrigatório; `en` e `it` são opcionais mas recomendados. Fallback: se idioma ativo ausente, usar `pt_BR`. Validar `LENGTH(valor) <= 120` por chave; truncar com "..." em UI se necessário, logar warning
 
 **Indexes**:
 
@@ -55,7 +55,11 @@ entidades para nuvem (progresso é local-only, perguntas são read-only).
   "exibicao_resposta": "Roma",
   "categoria": "geografia",
   "dificuldade": 5,
-  "contexto_historico": "Roma foi fundada em 753 aC no Lácio.",
+  "contexto_historico": {
+    "pt_BR": "Roma foi fundada em 753 aC no Lácio.",
+    "en": "Rome was founded in 753 BC in Latium.",
+    "it": "Roma fu fondata nel 753 a.C. nel Lazio."
+  },
   "data_criacao": "2026-05-10T14:30:00Z"
 }
 ```
@@ -266,7 +270,7 @@ CREATE TABLE perguntas (
   exibicao_resposta TEXT NOT NULL,
   categoria TEXT NOT NULL,
   dificuldade INTEGER NOT NULL CHECK (dificuldade BETWEEN 1 AND 10),
-  contexto_historico TEXT NOT NULL CHECK (LENGTH(contexto_historico) <= 120),
+  contexto_historico TEXT NOT NULL, -- JSON object {pt_BR, en, it}; pt_BR obrigatório; validação de comprimento feita app-side
   data_criacao TEXT NOT NULL
 );
 
@@ -336,7 +340,11 @@ CREATE INDEX idx_pergunta_dificuldade ON perguntas(dificuldade);
     "exibicao_resposta": "Roma",
     "categoria": "geografia",
     "dificuldade": 5,
-    "contexto_historico": "Roma foi fundada em 753 aC no Lácio.",
+    "contexto_historico": {
+      "pt_BR": "Roma foi fundada em 753 aC no Lácio.",
+      "en": "Rome was founded in 753 BC in Latium.",
+      "it": "Roma fu fondata nel 753 a.C. nel Lazio."
+    },
     "data_criacao": "2026-05-10T14:30:00Z"
   },
   ...
@@ -369,7 +377,7 @@ CREATE INDEX idx_pergunta_dificuldade ON perguntas(dificuldade);
 - `resposta`: normalized (lowercase, no accents)
 - `exibicao_resposta`: matches `resposta` in content, with accents
 - `dificuldade`: integer [1–10]
-- `contexto_historico`: 1–2 sentences, max 120 chars (per Q4)
+- `contexto_historico`: objeto `{pt_BR, en, it}` — `pt_BR` obrigatório; cada valor 1–2 sentences, max 120 chars (per Q1 clarificação)
 
 ### Progresso
 
